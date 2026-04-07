@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Prospecting — Settings</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --indigo:    #4F46E5;
+  --indigo-lt: #EEF2FF;
+  --cyan:      #0EA5E9;
+  --cyan-lt:   #E0F2FE;
+  --green:     #10B981;
+  --green-lt:  #D1FAE5;
+  --orange:    #F59E0B;
+  --orange-lt: #FEF3C7;
+  --violet:    #8B5CF6;
+  --violet-lt: #EDE9FE;
+  --red:       #EF4444;
+  --red-lt:    #FEE2E2;
+  --text:      #111827;
+  --text-2:    #6B7280;
+  --text-3:    #9CA3AF;
+  --border:    #E5E7EB;
+  --bg:        #F9FAFB;
+  --white:     #FFFFFF;
+  --panel-w:   500px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  background: var(--white);
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* ── PAGE SHELL (match screenshot exactly) ── */
+.page { padding: 32px 40px; max-width: 1400px; }
+
+h1 { font-size: 26px; font-weight: 700; color: #1e1b4b; margin-bottom: 24px; }
+
+/* Tab bar */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+.tab {
+  padding: 10px 18px; font-size: 14px; color: var(--text-2);
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; font-weight: 500;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--indigo); border-bottom-color: var(--indigo); font-weight: 600; }
+
+/* Settings card */
+.settings-card {
+  border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; margin-bottom: 24px;
+}
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-label { font-size: 14px; color: var(--text); }
+.setting-muted  { font-size: 14px; color: var(--text-2); }
+.toggle {
+  width: 44px; height: 24px; background: var(--indigo); border-radius: 12px;
+  position: relative; cursor: pointer; flex-shrink: 0;
+}
+.toggle::after {
+  content: ''; position: absolute; width: 18px; height: 18px;
+  background: white; border-radius: 50%; top: 3px; right: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.select-fake { display: flex; align-items: center; gap: 4px; color: var(--indigo); font-weight: 600; cursor: pointer; font-size: 14px; }
+
+/* Prospecting card */
+.prospect-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.card-header h2 { font-size: 16px; font-weight: 700; }
+.btn-primary {
+  background: var(--indigo); color: white; border: none; border-radius: 999px;
+  padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-primary:hover { background: #4338CA; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  padding: 10px 16px; text-align: left;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  border-bottom: 1px solid var(--border);
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover td { background: #FAFAFA; }
+tbody td { padding: 14px 16px; vertical-align: middle; }
+
+.rule-name { font-weight: 600; font-size: 14px; }
+.rule-sub   { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+.channel-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 500; padding: 3px 8px; border-radius: 6px;
+}
+.channel-pill.inapp { background: #F3E8FF; color: #7C3AED; }
+.channel-pill.email { background: var(--cyan-lt); color: #0369A1; }
+
+.status-pill {
+  display: inline-flex; align-items: center;
+  font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 999px;
+}
+.status-pill.new     { background: var(--indigo-lt); color: var(--indigo); }
+.status-pill.active  { background: var(--green-lt); color: #065F46; }
+.status-pill.pending { background: var(--orange-lt); color: #92400E; }
+
+/* Action icons */
+.action-icons { display: flex; align-items: center; gap: 6px; }
+.icon-btn {
+  width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+  background: white; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; color: var(--text-2);
+  transition: border-color .15s, color .15s, background .15s;
+}
+.icon-btn:hover { background: var(--bg); border-color: #CBD5E1; color: var(--text); }
+.icon-btn.red:hover { border-color: var(--red); color: var(--red); }
+
+/* ── METRICS COLUMN ─────────────────────────── */
+.metrics-cell { min-width: 280px; }
+
+.metrics-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
+  margin-bottom: 8px;
+}
+
+.metric-item {
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.metric-icon {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.metric-icon svg { width: 11px; height: 11px; }
+.metric-icon.leads      { background: var(--indigo-lt); color: var(--indigo); }
+.metric-icon.emails     { background: var(--cyan-lt);   color: var(--cyan); }
+.metric-icon.messages   { background: var(--orange-lt); color: var(--orange); }
+.metric-icon.milestones { background: var(--green-lt);  color: var(--green); }
+.metric-num  { font-size: 13px; font-weight: 700; color: var(--text); }
+.metric-lbl  { font-size: 12px; color: var(--text-2); }
+
+.view-all-link {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 12px; font-weight: 600; color: var(--indigo);
+  cursor: pointer; padding: 2px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s;
+  white-space: nowrap;
+}
+.view-all-link:hover { border-bottom-color: var(--indigo); }
+.view-all-link svg { width: 11px; height: 11px; }
+
+/* ── 3-DOT MENU ─────────────────────────────── */
+.kebab-wrap { position: relative; display: inline-block; }
+.kebab-btn {
+  width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+  background: white; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; color: var(--text-2);
+  transition: border-color .15s, background .15s;
+}
+.kebab-btn:hover { background: var(--bg); border-color: #CBD5E1; color: var(--text); }
+.kebab-menu {
+  position: absolute; right: 0; top: calc(100% + 4px);
+  background: white; border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.10); min-width: 140px; z-index: 30;
+  overflow: hidden; display: none;
+}
+.kebab-menu.open { display: block; }
+.kebab-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 14px; font-size: 13px; font-weight: 500; cursor: pointer;
+  color: var(--text); transition: background .1s;
+}
+.kebab-item:hover { background: var(--bg); }
+.kebab-item svg { width: 13px; height: 13px; color: var(--text-2); flex-shrink: 0; }
+.kebab-item.danger { color: var(--red); }
+.kebab-item.danger svg { color: var(--red); }
+
+/* ── OVERLAY ─────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.3);
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s; z-index: 40;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+
+/* ── SIDE PANEL ──────────────────────────────── */
+.panel {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: var(--panel-w); background: white;
+  box-shadow: -4px 0 40px rgba(0,0,0,.12);
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  z-index: 50; display: flex; flex-direction: column;
+}
+.panel.open { transform: translateX(0); }
+
+/* Panel header */
+.ph {
+  padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.ph-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.ph-name { font-size: 18px; font-weight: 700; }
+.ph-meta { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.close-btn {
+  width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 8px;
+  background: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); flex-shrink: 0; transition: background .15s;
+}
+.close-btn:hover { background: var(--bg); }
+
+/* Panel body */
+.pb { flex: 1; overflow-y: auto; }
+.pb::-webkit-scrollbar { width: 4px; }
+.pb::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.ps { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+.ps:last-child { border-bottom: none; }
+
+.ps-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--text-2);
+  display: flex; align-items: center; gap: 6px; margin-bottom: 14px;
+}
+.ps-title svg { width: 13px; height: 13px; }
+
+/* Stats grid */
+.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.stat {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.stat:hover { border-color: #A5B4FC; box-shadow: 0 0 0 3px rgba(79,70,229,.06); }
+.stat-top { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.stat-ico {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.stat-ico svg { width: 11px; height: 11px; }
+.stat-ico.leads    { background: var(--indigo-lt); color: var(--indigo); }
+.stat-ico.emails   { background: var(--cyan-lt);   color: var(--cyan); }
+.stat-ico.opens    { background: var(--violet-lt); color: var(--violet); }
+.stat-ico.replies  { background: var(--orange-lt); color: var(--orange); }
+.stat-ico.rate     { background: var(--green-lt);  color: var(--green); }
+.stat-ico.time     { background: var(--red-lt);    color: var(--red); }
+.stat-ico.messages { background: var(--orange-lt); color: var(--orange); }
+.stat-ico.milest   { background: var(--green-lt);  color: var(--green); }
+.stat-lbl { font-size: 11px; color: var(--text-2); }
+.stat-val { font-size: 20px; font-weight: 700; }
+.stat-delta { font-size: 11px; font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 2px; }
+.up   { color: var(--green); }
+.down { color: var(--red); }
+
+/* Sparkline */
+.spark-wrap { }
+.spark-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.spark-period { font-size: 12px; color: var(--indigo); font-weight: 600; cursor: pointer; }
+.spark-bars { display: flex; align-items: flex-end; gap: 5px; height: 56px; }
+.sbar {
+  flex: 1; border-radius: 4px 4px 0 0; background: var(--indigo);
+  position: relative; cursor: pointer; transition: opacity .15s;
+}
+.sbar:hover { opacity: .75; }
+.sbar-tip {
+  position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%);
+  background: #1F2937; color: white; font-size: 10px; font-weight: 600;
+  padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity .15s;
+}
+.sbar:hover .sbar-tip { opacity: 1; }
+.spark-days { display: flex; gap: 5px; margin-top: 4px; }
+.spark-day { flex: 1; text-align: center; font-size: 10px; color: var(--text-3); }
+
+/* Milestones */
+.ms-list { display: flex; flex-direction: column; gap: 8px; }
+.ms-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg); transition: border-color .15s;
+}
+.ms-item:hover { border-color: #A5B4FC; }
+.ms-ico {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.ms-ico svg { width: 13px; height: 13px; }
+.ms-body { flex: 1; }
+.ms-name { font-size: 13px; font-weight: 600; }
+.ms-desc { font-size: 12px; color: var(--text-2); margin-top: 1px; }
+.ms-date { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+.ms-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+  flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+}
+.ms-badge.done    { background: var(--green-lt); color: #065F46; }
+.ms-badge.pending { background: var(--orange-lt); color: #92400E; }
+
+/* Activity */
+.act-list { display: flex; flex-direction: column; }
+.act-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.act-item:last-child { border-bottom: none; }
+.act-dot {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.act-dot svg { width: 12px; height: 12px; }
+.act-action { font-size: 13px; font-weight: 500; }
+.act-action span { color: var(--indigo); font-weight: 600; }
+.act-time { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+/* Panel footer */
+.pf {
+  padding: 14px 24px; border-top: 1px solid var(--border);
+  display: flex; gap: 10px; flex-shrink: 0;
+}
+.btn-ghost {
+  flex: 1; padding: 9px; border: 1px solid var(--border); background: white;
+  border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text);
+  transition: background .15s;
+}
+.btn-ghost:hover { background: var(--bg); }
+.btn-fill {
+  flex: 2; padding: 9px; background: var(--indigo); color: white;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: background .15s;
+}
+.btn-fill:hover { background: #4338CA; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1>Settings</h1>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab">Accounts</div>
+    <div class="tab">Billing</div>
+    <div class="tab">Finances</div>
+    <div class="tab">Integrations</div>
+    <div class="tab">Phone Numbers</div>
+    <div class="tab">Notifications</div>
+    <div class="tab active">AI Prospecting</div>
+    <div class="tab">Email templates</div>
+  </div>
+
+  <!-- AI Settings -->
+  <div style="font-size:18px;font-weight:700;margin-bottom:16px;color:#1e1b4b">AI settings</div>
+  <div class="settings-card">
+    <div class="setting-row">
+      <span class="setting-label">Automatic summary generation</span>
+      <div class="toggle"></div>
+    </div>
+    <div class="setting-row">
+      <span class="setting-muted">Summary data refreshed</span>
+      <div class="select-fake">Monthly <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg></div>
+    </div>
+  </div>
+
+  <!-- AI Prospecting table -->
+  <div class="prospect-card">
+    <div class="card-header">
+      <h2>AI Prospecting</h2>
+      <button class="btn-primary">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+        New prospecting rule
+      </button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Prospect Detail</th>
+          <th>Source</th>
+          <th>Channel</th>
+          <th>Created on</th>
+          <th>Status</th>
+          <th>Metrics</th>
+          <th style="text-align:right">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+<!-- Side Panel -->
+<div class="panel" id="panel">
+  <div class="ph">
+    <div class="ph-top">
+      <div>
+        <div class="ph-name" id="pName"></div>
+        <div class="ph-meta" id="pMeta"></div>
+      </div>
+      <button class="close-btn" onclick="closePanel()">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="pb">
+    <!-- §1 Metrics -->
+    <div class="ps">
+      <div class="ps-title">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>
+        Prospecting Metrics
+      </div>
+      <div class="stats-grid" id="pStats"></div>
+    </div>
+
+    <!-- §1b Trend -->
+    <div class="ps">
+      <div class="spark-label">
+        <div class="ps-title" style="margin-bottom:0">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 0h1v15h15v1H0V0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5z"/></svg>
+          Email Sends — Last 7 Days
+        </div>
+        <span class="spark-period">This week ▾</span>
+      </div>
+      <div class="spark-bars" id="pSpark"></div>
+      <div class="spark-days" id="pDays"></div>
+    </div>
+
+    <!-- §2 Milestones -->
+    <div class="ps">
+      <div class="ps-title">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>
+        Milestones Achieved
+      </div>
+      <div class="ms-list" id="pMilestones"></div>
+    </div>
+
+    <!-- §3 Activity -->
+    <div class="ps">
+      <div class="ps-title">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg>
+        Agent Activity
+      </div>
+      <div class="act-list" id="pActivity"></div>
+    </div>
+  </div>
+
+  <div class="pf">
+    <button class="btn-ghost" onclick="closePanel()">Close</button>
+    <button class="btn-fill">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
+      Edit Rule Settings
+    </button>
+  </div>
+</div>
+
+<script>
+/* ─── SVG ICONS ──────────────────────────────── */
+const I = {
+  lead:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/><path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>`,
+  email:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/></svg>`,
+  eye:     `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>`,
+  msg:     `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg>`,
+  rate:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>`,
+  clock:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>`,
+  check:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>`,
+  edit:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>`,
+  trash:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>`,
+  chevron: `<svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>`,
+};
+
+/* ─── DATA ───────────────────────────────────── */
+const rules = [
+  {
+    id:1, name:'All Buyers', type:'Buyer', source:'Other Agency',
+    channel:'InApp', created:'04/07/2026', status:'new', statusLabel:'New Client',
+    metrics:{ leads:247, emails:124, opens:'38%', replies:12, rate:'31%', avgTime:'4.2h', messages:19, milestones:5 },
+    trend:[14,18,22,16,30,27,34],
+    milestones:[
+      {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Apr 1, 2026',  done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
+      {name:'First Reply Received',desc:'Lead responded to outreach email',    date:'Apr 3, 2026',  done:true,  bg:'#D1FAE5', fg:'#10B981'},
+      {name:'Meeting Booked',      desc:'Lead scheduled a discovery call',     date:'Apr 5, 2026',  done:true,  bg:'#EDE9FE', fg:'#8B5CF6'},
+      {name:'Offer Sent',          desc:'Agent sent property recommendations', date:'Apr 6, 2026',  done:true,  bg:'#FEF3C7', fg:'#F59E0B'},
+      {name:'Contract Submitted',  desc:'Awaiting lead signature',             date:'Pending',      done:false, bg:'#FEE2E2', fg:'#EF4444'},
+    ],
+    activity:[
+      {action:'Sent email to <span>Marcus Webb</span>',        time:'2 hours ago',   bg:'#EEF2FF', fg:'#4F46E5', ico:'email'},
+      {action:'New lead <span>Sarah K.</span> matched rule',   time:'5 hours ago',   bg:'#D1FAE5', fg:'#10B981', ico:'lead'},
+      {action:'Reply received from <span>David Cho</span>',    time:'Yesterday',     bg:'#FEF3C7', fg:'#F59E0B', ico:'msg'},
+      {action:'<span>Meeting booked</span> with Priya Rajan',  time:'Apr 5, 2026',   bg:'#EDE9FE', fg:'#8B5CF6', ico:'check'},
+      {action:'Rule matched <span>12 new leads</span>',        time:'Apr 4, 2026',   bg:'#E0F2FE', fg:'#0EA5E9', ico:'lead'},
+    ]
+  },
+  {
+    id:2, name:'All Sellers', type:'Seller', source:'Radius',
+    channel:'Email', created:'03/15/2026', status:'active', statusLabel:'Active',
+    metrics:{ leads:183, emails:91, opens:'44%', replies:8, rate:'22%', avgTime:'6.1h', messages:11, milestones:3 },
+    trend:[8,12,10,15,11,18,14],
+    milestones:[
+      {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Mar 20, 2026', done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
+      {name:'First Reply Received',desc:'Lead responded to outreach email',    date:'Mar 25, 2026', done:true,  bg:'#D1FAE5', fg:'#10B981'},
+      {name:'Meeting Booked',      desc:'Lead scheduled a discovery call',     date:'Apr 2, 2026',  done:true,  bg:'#EDE9FE', fg:'#8B5CF6'},
+      {name:'Offer Sent',          desc:'Agent sent property recommendations', date:'Pending',      done:false, bg:'#FEF3C7', fg:'#F59E0B'},
+      {name:'Contract Submitted',  desc:'Awaiting lead signature',             date:'Pending',      done:false, bg:'#FEE2E2', fg:'#EF4444'},
+    ],
+    activity:[
+      {action:'Sent email to <span>James Liu</span>',         time:'1 hour ago',  bg:'#EEF2FF', fg:'#4F46E5', ico:'email'},
+      {action:'New lead <span>Tanya M.</span> matched rule',  time:'3 hours ago', bg:'#D1FAE5', fg:'#10B981', ico:'lead'},
+      {action:'Reply from <span>Robert F.</span>',            time:'Apr 6, 2026', bg:'#FEF3C7', fg:'#F59E0B', ico:'msg'},
+    ]
+  },
+  {
+    id:3, name:'Hot Leads — Downtown', type:'Buyer', source:'Zillow',
+    channel:'Email', created:'04/01/2026', status:'pending', statusLabel:'Pending Review',
+    metrics:{ leads:312, emails:156, opens:'29%', replies:5, rate:'18%', avgTime:'8.4h', messages:7, milestones:2 },
+    trend:[20,25,18,30,22,28,35],
+    milestones:[
+      {name:'First Contact Made',  desc:'Agent sent first outreach',     date:'Apr 3, 2026', done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
+      {name:'First Reply Received',desc:'Awaiting first reply from lead',date:'Pending',     done:false, bg:'#D1FAE5', fg:'#10B981'},
+      {name:'Meeting Booked',      desc:'No meetings booked yet',        date:'Pending',     done:false, bg:'#EDE9FE', fg:'#8B5CF6'},
+      {name:'Offer Sent',          desc:'Not started',                   date:'Pending',     done:false, bg:'#FEF3C7', fg:'#F59E0B'},
+      {name:'Contract Submitted',  desc:'Not started',                   date:'Pending',     done:false, bg:'#FEE2E2', fg:'#EF4444'},
+    ],
+    activity:[
+      {action:'Sent email to <span>Connor Walsh</span>',  time:'30 min ago',  bg:'#EEF2FF', fg:'#4F46E5', ico:'email'},
+      {action:'<span>312 leads</span> matched on create', time:'Apr 1, 2026', bg:'#D1FAE5', fg:'#10B981', ico:'lead'},
+    ]
+  }
+];
+
+/* ─── RENDER TABLE ───────────────────────────── */
+function renderTable() {
+  const tbody = document.getElementById('tbody');
+  rules.forEach(r => {
+    const m = r.metrics;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="rule-name">${r.name}</div>
+        <div class="rule-sub">${r.type}</div>
+      </td>
+      <td>${r.source}</td>
+      <td>
+        <span class="channel-pill ${r.channel === 'Email' ? 'email' : 'inapp'}">
+          ${r.channel === 'Email' ? I.email : I.msg} ${r.channel}
+        </span>
+      </td>
+      <td>${r.created}</td>
+      <td><span class="status-pill ${r.status}">${r.statusLabel}</span></td>
+      <td class="metrics-cell">
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <div class="metric-icon leads">${I.lead}</div>
+            <span class="metric-num">${m.leads}</span>
+            <span class="metric-lbl">Leads</span>
+          </div>
+          <div class="metric-item">
+            <div class="metric-icon emails">${I.email}</div>
+            <span class="metric-num">${m.emails}</span>
+            <span class="metric-lbl">Emails sent</span>
+          </div>
+          <div class="metric-item">
+            <div class="metric-icon messages">${I.msg}</div>
+            <span class="metric-num">${m.messages}</span>
+            <span class="metric-lbl">Messages</span>
+          </div>
+          <div class="metric-item">
+            <div class="metric-icon milestones">${I.check}</div>
+            <span class="metric-num">${m.milestones}</span>
+            <span class="metric-lbl">Milestones</span>
+          </div>
+        </div>
+        <span class="view-all-link" onclick="openPanel(${r.id})">View all ${I.chevron}</span>
+      </td>
+      <td style="text-align:right">
+        <div class="kebab-wrap">
+          <button class="kebab-btn" onclick="toggleMenu(event, this)" title="Actions">
+            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg>
+          </button>
+          <div class="kebab-menu">
+            <div class="kebab-item">${I.edit} Edit rule</div>
+            <div class="kebab-item" onclick="openPanel(${r.id})">${I.rate} View metrics</div>
+            <div class="kebab-item danger">${I.trash} Delete</div>
+          </div>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ─── OPEN PANEL ─────────────────────────────── */
+function openPanel(id) {
+  const r = rules.find(x => x.id === id);
+  if (!r) return;
+  const m = r.metrics;
+
+  document.getElementById('pName').textContent = r.name;
+  document.getElementById('pMeta').innerHTML = `
+    <span class="status-pill ${r.status}">${r.statusLabel}</span>
+    <span class="channel-pill ${r.channel === 'Email' ? 'email' : 'inapp'}">${r.channel}</span>
+    <span style="font-size:12px;color:#6B7280">Source: ${r.source}</span>
+  `;
+
+  const stats = [
+    {cls:'leads',   val:m.leads,      label:'Leads Matched', delta:'+12 this week', up:true,  ico:I.lead  },
+    {cls:'emails',  val:m.emails,     label:'Emails Sent',   delta:'+8 this week',  up:true,  ico:I.email },
+    {cls:'opens',   val:m.opens,      label:'Open Rate',     delta:parseFloat(m.opens)>30?'+2% vs avg':'-3% vs avg', up:parseFloat(m.opens)>30, ico:I.eye},
+    {cls:'replies', val:m.replies,    label:'Replies',       delta:'+1 this week',  up:true,  ico:I.msg   },
+    {cls:'rate',    val:m.rate,       label:'Response Rate', delta:'Avg 18%',       up:parseFloat(m.rate)>18, ico:I.rate},
+    {cls:'time',    val:m.avgTime,    label:'Avg Reply Time',delta:'↓ Improving',   up:true,  ico:I.clock },
+    {cls:'messages',val:m.messages,   label:'Messages Sent', delta:'+2 this week',  up:true,  ico:I.msg   },
+    {cls:'milest',  val:m.milestones, label:'Milestones Hit',delta:`${m.milestones} of 5`,up:true, ico:I.check},
+  ];
+  document.getElementById('pStats').innerHTML = stats.map(s => `
+    <div class="stat">
+      <div class="stat-top"><div class="stat-ico ${s.cls}">${s.ico}</div><span class="stat-lbl">${s.label}</span></div>
+      <div class="stat-val">${s.val}</div>
+      <div class="stat-delta ${s.up?'up':'down'}">${s.up?'↑':'↓'} ${s.delta}</div>
+    </div>
+  `).join('');
+
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const max = Math.max(...r.trend);
+  const shades = ['#818CF8','#6366F1','#4F46E5','#4338CA','#3730A3','#6366F1','#4F46E5'];
+  document.getElementById('pSpark').innerHTML = r.trend.map((v,i) => `
+    <div class="sbar" style="height:${Math.round((v/max)*52)}px;background:${shades[i]}">
+      <div class="sbar-tip">${v}</div>
+    </div>`).join('');
+  document.getElementById('pDays').innerHTML = days.map(d => `<span class="spark-day">${d}</span>`).join('');
+
+  document.getElementById('pMilestones').innerHTML = r.milestones.map(ms => `
+    <div class="ms-item">
+      <div class="ms-ico" style="background:${ms.bg};color:${ms.fg}">${I.check}</div>
+      <div class="ms-body">
+        <div class="ms-name">${ms.name}</div>
+        <div class="ms-desc">${ms.desc}</div>
+        <div class="ms-date">${ms.date}</div>
+      </div>
+      <span class="ms-badge ${ms.done?'done':'pending'}">${ms.done?'✓ Done':'Pending'}</span>
+    </div>`).join('');
+
+  document.getElementById('pActivity').innerHTML = r.activity.map(a => `
+    <div class="act-item">
+      <div class="act-dot" style="background:${a.bg};color:${a.fg}">${I[a.ico]}</div>
+      <div>
+        <div class="act-action">${a.action}</div>
+        <div class="act-time">${a.time}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('panel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('panel').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePanel(); closeAllMenus(); } });
+
+function toggleMenu(e, btn) {
+  e.stopPropagation();
+  const menu = btn.nextElementSibling;
+  const isOpen = menu.classList.contains('open');
+  closeAllMenus();
+  if (!isOpen) menu.classList.add('open');
+}
+
+function closeAllMenus() {
+  document.querySelectorAll('.kebab-menu.open').forEach(m => m.classList.remove('open'));
+}
+
+document.addEventListener('click', closeAllMenus);
+
+renderTable();
+</script>
+</body>
+</html>
