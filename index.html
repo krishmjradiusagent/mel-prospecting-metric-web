@@ -430,19 +430,6 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
       <div class="stats-grid" id="pStats"></div>
     </div>
 
-    <!-- §1b Trend -->
-    <div class="ps">
-      <div class="spark-label">
-        <div class="ps-title" style="margin-bottom:0">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 0h1v15h15v1H0V0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5z"/></svg>
-          Email Sends — Last 7 Days
-        </div>
-        <span class="spark-period">This week ▾</span>
-      </div>
-      <div class="spark-bars" id="pSpark"></div>
-      <div class="spark-days" id="pDays"></div>
-    </div>
-
     <!-- §2 Milestones -->
     <div class="ps">
       <div class="ps-title">
@@ -492,7 +479,7 @@ const rules = [
   {
     id:1, name:'All Buyers', type:'Buyer', source:'Other Agency',
     channel:'InApp', created:'04/07/2026', status:'new', statusLabel:'New Client',
-    metrics:{ leads:247, emails:124, opens:'38%', replies:12, rate:'31%', avgTime:'4.2h', messages:19, milestones:5 },
+    metrics:{ leads:247, emails:124, opens:'38%', replies:12, rate:'31%', avgTime:'4.2h', messages:19, msgReceived:14, milestones:5 },
     trend:[14,18,22,16,30,27,34],
     milestones:[
       {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Apr 1, 2026',  done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
@@ -512,7 +499,7 @@ const rules = [
   {
     id:2, name:'All Sellers', type:'Seller', source:'Radius',
     channel:'Email', created:'03/15/2026', status:'active', statusLabel:'Active',
-    metrics:{ leads:183, emails:91, opens:'44%', replies:8, rate:'22%', avgTime:'6.1h', messages:11, milestones:3 },
+    metrics:{ leads:183, emails:91, opens:'44%', replies:8, rate:'22%', avgTime:'6.1h', messages:11, msgReceived:7, milestones:3 },
     trend:[8,12,10,15,11,18,14],
     milestones:[
       {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Mar 20, 2026', done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
@@ -530,7 +517,7 @@ const rules = [
   {
     id:3, name:'Hot Leads — Downtown', type:'Buyer', source:'Zillow',
     channel:'Email', created:'04/01/2026', status:'pending', statusLabel:'Pending Review',
-    metrics:{ leads:312, emails:156, opens:'29%', replies:5, rate:'18%', avgTime:'8.4h', messages:7, milestones:2 },
+    metrics:{ leads:312, emails:156, opens:'29%', replies:5, rate:'18%', avgTime:'8.4h', messages:7, msgReceived:3, milestones:2 },
     trend:[20,25,18,30,22,28,35],
     milestones:[
       {name:'First Contact Made',  desc:'Agent sent first outreach',     date:'Apr 3, 2026', done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
@@ -588,7 +575,6 @@ function renderTable() {
             <span class="metric-lbl">Milestones</span>
           </div>
         </div>
-        <span class="view-all-link" onclick="openPanel(${r.id})">View all ${I.chevron}</span>
       </td>
       <td style="text-align:right">
         <div class="kebab-wrap">
@@ -621,14 +607,11 @@ function openPanel(id) {
   `;
 
   const stats = [
-    {cls:'leads',   val:m.leads,      label:'Leads Matched', delta:'+12 this week', up:true,  ico:I.lead  },
-    {cls:'emails',  val:m.emails,     label:'Emails Sent',   delta:'+8 this week',  up:true,  ico:I.email },
-    {cls:'opens',   val:m.opens,      label:'Open Rate',     delta:parseFloat(m.opens)>30?'+2% vs avg':'-3% vs avg', up:parseFloat(m.opens)>30, ico:I.eye},
-    {cls:'replies', val:m.replies,    label:'Replies',       delta:'+1 this week',  up:true,  ico:I.msg   },
-    {cls:'rate',    val:m.rate,       label:'Response Rate', delta:'Avg 18%',       up:parseFloat(m.rate)>18, ico:I.rate},
-    {cls:'time',    val:m.avgTime,    label:'Avg Reply Time',delta:'↓ Improving',   up:true,  ico:I.clock },
-    {cls:'messages',val:m.messages,   label:'Messages Sent', delta:'+2 this week',  up:true,  ico:I.msg   },
-    {cls:'milest',  val:m.milestones, label:'Milestones Hit',delta:`${m.milestones} of 5`,up:true, ico:I.milestone},
+    {cls:'leads',    val:m.leads,        label:'Leads',                   delta:'+12 this week', up:true, ico:I.lead     },
+    {cls:'emails',   val:m.emails,       label:'Email Sent',              delta:'+8 this week',  up:true, ico:I.email    },
+    {cls:'messages', val:m.messages,     label:'Text Message Sent',       delta:'+2 this week',  up:true, ico:I.msg      },
+    {cls:'msgrec',   val:m.msgReceived,  label:'Text Messages Received',  delta:'+1 this week',  up:true, ico:I.msg      },
+    {cls:'milest',   val:m.milestones,   label:'Milestones Achieved',     delta:`${m.milestones} of 5`, up:true, ico:I.milestone},
   ];
   document.getElementById('pStats').innerHTML = stats.map(s => `
     <div class="stat">
@@ -637,15 +620,6 @@ function openPanel(id) {
       <div class="stat-delta ${s.up?'up':'down'}">${s.up?'↑':'↓'} ${s.delta}</div>
     </div>
   `).join('');
-
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const max = Math.max(...r.trend);
-  const shades = ['#818CF8','#6366F1','#4F46E5','#4338CA','#3730A3','#6366F1','#4F46E5'];
-  document.getElementById('pSpark').innerHTML = r.trend.map((v,i) => `
-    <div class="sbar" style="height:${Math.round((v/max)*52)}px;background:${shades[i]}">
-      <div class="sbar-tip">${v}</div>
-    </div>`).join('');
-  document.getElementById('pDays').innerHTML = days.map(d => `<span class="spark-day">${d}</span>`).join('');
 
   let doneCount = 0;
   document.getElementById('pMilestones').innerHTML = r.milestones.map((ms, i) => {
