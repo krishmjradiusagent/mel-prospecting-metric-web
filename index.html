@@ -146,11 +146,11 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
   display: flex; align-items: center; justify-content: center;
 }
 .metric-icon svg { width: 11px; height: 11px; }
-.metric-icon.leads      { background: var(--indigo-lt); color: var(--indigo); }
-.metric-icon.emails     { background: var(--cyan-lt);   color: var(--cyan); }
-.metric-icon.messages   { background: var(--orange-lt); color: var(--orange); }
-.metric-icon.milestones { background: #d97706; }
-.metric-icon.milestones img { width: 11px; height: 11px; object-fit: contain; }
+.metric-icon.leads      { background: #e0e7ff; color: #4338ca; }
+.metric-icon.emails     { background: #e0f2fe; color: #0284c7; }
+.metric-icon.messages   { background: #d1fae5; color: #059669; }
+.metric-icon.milestones { background: #fef3c7; color: #d97706; }
+.metric-icon.milestones img { width: 11px; height: 11px; object-fit: contain; filter: invert(47%) sepia(85%) saturate(500%) hue-rotate(10deg) brightness(95%); }
 .metric-num  { font-size: 13px; font-weight: 700; color: var(--text); }
 .metric-lbl  { font-size: 12px; color: var(--text-2); }
 
@@ -243,8 +243,8 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 /* Milestone animated icon */
 .ms-title-ico {
   width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  display: flex; align-items: center; justify-content: center; color: #fff;
+  background: #fef3c7;
+  display: flex; align-items: center; justify-content: center;
   animation: msIconGlow 2.4s ease-in-out infinite;
   box-shadow: 0 2px 8px rgba(245,158,11,.35);
 }
@@ -270,15 +270,12 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .stat-ico svg { width: 11px; height: 11px; }
-.stat-ico.leads    { background: var(--indigo-lt); color: var(--indigo); }
-.stat-ico.emails   { background: var(--cyan-lt);   color: var(--cyan); }
-.stat-ico.opens    { background: var(--violet-lt); color: var(--violet); }
-.stat-ico.replies  { background: var(--orange-lt); color: var(--orange); }
-.stat-ico.rate     { background: var(--green-lt);  color: var(--green); }
-.stat-ico.time     { background: var(--red-lt);    color: var(--red); }
-.stat-ico.messages { background: var(--orange-lt); color: var(--orange); }
-.stat-ico.milest   { background: #d97706; }
-.stat-ico.milest img { width: 11px; height: 11px; object-fit: contain; }
+.stat-ico.leads    { background: #e0e7ff; color: #4338ca; }
+.stat-ico.messages { background: #d1fae5; color: #059669; }
+.stat-ico.replies  { background: #fce7f3; color: #db2777; }
+.stat-ico.msgrec   { background: #e0f2fe; color: #0284c7; }
+.stat-ico.milest   { background: #fef3c7; color: #d97706; }
+.stat-ico.milest img { width: 11px; height: 11px; object-fit: contain; filter: invert(47%) sepia(85%) saturate(500%) hue-rotate(10deg) brightness(95%); }
 .stat-lbl { font-size: 11px; color: var(--text-2); }
 .stat-val { font-size: 20px; font-weight: 700; }
 .stat-delta { font-size: 11px; font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 2px; }
