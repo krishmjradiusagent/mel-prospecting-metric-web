@@ -626,9 +626,9 @@ function openPanel(id) {
 
   const stats = [
     {cls:'leads',    val:m.leads,       label:'Leads',                  delta:'+12 this week',        up:true, ico:I.lead,      wide:false},
-    {cls:'messages', val:m.messages,    label:'Text Messages Sent',     delta:'+2 this week',         up:true, ico:I.msg,       wide:false},
+    {cls:'msgrec',   val:m.msgReceived, label:'Text Replies',           delta:'+1 this week',         up:true, ico:I.msg,       wide:false},
     {cls:'replies',  val:m.replies,     label:'Email Replies',          delta:'+1 this week',         up:true, ico:I.email,     wide:false},
-    {cls:'msgrec',   val:m.msgReceived, label:'Text Replies',           delta:'+1 this week',         up:true, ico:I.msg,       wide:true },
+    {cls:'messages', val:m.messages,    label:'Text Messages Sent',     delta:'+2 this week',         up:true, ico:I.msg,       wide:true },
     {cls:'milest',   val:m.milestones,  label:'Milestones Achieved',    delta:`${m.milestones} of 5`, up:true, ico:I.milestone, wide:true },
   ];
   document.getElementById('pStats').innerHTML = stats.map(s => `
