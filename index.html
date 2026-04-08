@@ -130,11 +130,10 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 .icon-btn.red:hover { border-color: var(--red); color: var(--red); }
 
 /* ── METRICS COLUMN ─────────────────────────── */
-.metrics-cell { min-width: 280px; }
+.metrics-cell { min-width: 160px; max-width: 180px; }
 
 .metrics-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
-  margin-bottom: 8px;
+  display: flex; flex-direction: column; gap: 5px;
 }
 
 .metric-item {
@@ -363,13 +362,13 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 }
 .btn-ghost {
   flex: 1; padding: 9px; border: 1px solid var(--border); background: white;
-  border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text);
+  border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text);
   transition: background .15s;
 }
 .btn-ghost:hover { background: var(--bg); }
 .btn-fill {
   flex: 2; padding: 9px; background: var(--indigo); color: white;
-  border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+  border: none; border-radius: 999px; font-size: 13px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
   transition: background .15s;
 }
@@ -462,7 +461,7 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
     <!-- §2 Milestones -->
     <div class="ps">
       <div class="ps-title">
-        <div class="ms-title-ico"><img src="https://www.figma.com/api/mcp/asset/f317a6ea-2e08-467c-9d77-c8dec088ce00" style="width:11px;height:11px;object-fit:contain;display:block" /></div>
+        <div class="ms-title-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
         Milestones Achieved
       </div>
       <div class="ms-list" id="pMilestones"></div>
@@ -589,16 +588,6 @@ function renderTable() {
             <span class="metric-lbl">Leads</span>
           </div>
           <div class="metric-item">
-            <div class="metric-icon emails">${I.email}</div>
-            <span class="metric-num">${m.emails}</span>
-            <span class="metric-lbl">Emails sent</span>
-          </div>
-          <div class="metric-item">
-            <div class="metric-icon messages">${I.msg}</div>
-            <span class="metric-num">${m.messages}</span>
-            <span class="metric-lbl">Messages</span>
-          </div>
-          <div class="metric-item">
             <div class="metric-icon milestones">${I.milestone}</div>
             <span class="metric-num">${m.milestones}</span>
             <span class="metric-lbl">Milestones</span>
@@ -637,9 +626,9 @@ function openPanel(id) {
 
   const stats = [
     {cls:'leads',    val:m.leads,       label:'Leads',                  delta:'+12 this week',        up:true, ico:I.lead,      wide:false},
-    {cls:'messages', val:m.messages,    label:'Messages Sent',          delta:'+2 this week',         up:true, ico:I.msg,       wide:false},
-    {cls:'replies',  val:m.replies,     label:'Replies',                delta:'+1 this week',         up:true, ico:I.msg,       wide:false},
-    {cls:'msgrec',   val:m.msgReceived, label:'Text Messages Received', delta:'+1 this week',         up:true, ico:I.msg,       wide:true },
+    {cls:'messages', val:m.messages,    label:'Text Messages Sent',     delta:'+2 this week',         up:true, ico:I.msg,       wide:false},
+    {cls:'replies',  val:m.replies,     label:'Email Replies',          delta:'+1 this week',         up:true, ico:I.email,     wide:false},
+    {cls:'msgrec',   val:m.msgReceived, label:'Text Replies',           delta:'+1 this week',         up:true, ico:I.msg,       wide:true },
     {cls:'milest',   val:m.milestones,  label:'Milestones Achieved',    delta:`${m.milestones} of 5`, up:true, ico:I.milestone, wide:true },
   ];
   document.getElementById('pStats').innerHTML = stats.map(s => `
