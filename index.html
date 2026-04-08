@@ -149,7 +149,7 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 .metric-icon.leads      { background: var(--indigo-lt); color: var(--indigo); }
 .metric-icon.emails     { background: var(--cyan-lt);   color: var(--cyan); }
 .metric-icon.messages   { background: var(--orange-lt); color: var(--orange); }
-.metric-icon.milestones { background: var(--green-lt);  color: var(--green); }
+.metric-icon.milestones { background: #ede9fe; color: #2f2b49; }
 .metric-num  { font-size: 13px; font-weight: 700; color: var(--text); }
 .metric-lbl  { font-size: 12px; color: var(--text-2); }
 
@@ -288,28 +288,42 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 .spark-day { flex: 1; text-align: center; font-size: 10px; color: var(--text-3); }
 
 /* Milestones */
-.ms-list { display: flex; flex-direction: column; gap: 8px; }
+/* ── Milestone cards — mobile-matched style ── */
+.ms-list { display: flex; flex-direction: column; gap: 10px; }
 .ms-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
-  background: var(--bg); transition: border-color .15s;
+  background: #f7f0ff; border-radius: 12px; padding: 12px;
+  display: flex; flex-direction: column; gap: 6px; border: none;
+  cursor: default;
+  animation: msIn 0.32s cubic-bezier(0.34,1.56,0.64,1) both;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
 }
-.ms-item:hover { border-color: #A5B4FC; }
-.ms-ico {
-  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+.ms-item:hover { transform: translateY(-2px); box-shadow: 0 4px 18px rgba(79,46,229,.10); }
+.ms-item.ms-pending { opacity: 0.62; }
+.ms-row1 { display: flex; align-items: center; gap: 8px; }
+.ms-pill {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 3px 8px; border-radius: 24px;
+  font-size: 10px; font-weight: 600; color: #fff; flex-shrink: 0; white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.ms-pill svg { width: 9px; height: 9px; opacity: .85; }
+.ms-name { font-size: 14px; font-weight: 600; color: #1e1b4b; letter-spacing: 0.3px; line-height: 1.3; }
+.ms-desc { font-size: 12px; color: #ad94c7; line-height: 1.4; }
+.ms-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; }
+.ms-date { font-size: 10px; color: #6e5f7d; letter-spacing: 0.3px; }
+.ms-num {
+  width: 20px; height: 20px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
 }
-.ms-ico svg { width: 13px; height: 13px; }
-.ms-body { flex: 1; }
-.ms-name { font-size: 13px; font-weight: 600; }
-.ms-desc { font-size: 12px; color: var(--text-2); margin-top: 1px; }
-.ms-date { font-size: 11px; color: var(--text-3); margin-top: 4px; }
-.ms-badge {
-  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
-  flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+.ms-num.done    { background: #d1fae5; color: #065f46; }
+.ms-num.pending { background: #f3f4f6; color: #9ca3af; }
+.ms-item:hover .ms-num.done { transform: scale(1.15); }
+@keyframes msIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
 }
-.ms-badge.done    { background: var(--green-lt); color: #065F46; }
-.ms-badge.pending { background: var(--orange-lt); color: #92400E; }
 
 /* Activity */
 .act-list { display: flex; flex-direction: column; }
@@ -468,7 +482,7 @@ const I = {
   rate:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>`,
   clock:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>`,
   check:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0-1a8 8 0 1 1 0 16A8 8 0 0 1 8 0z"/><path d="M8 4.5a.5.5 0 0 1 .5.5v3.793l2.146 2.147a.5.5 0 0 1-.708.707l-2.5-2.5A.5.5 0 0 1 7.5 9V5a.5.5 0 0 1 .5-.5z"/></svg>`,
-  milestone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+  milestone: `<img src="https://www.figma.com/api/mcp/asset/baf7e70a-88ef-49d5-b83e-04c20e77525a" style="width:13px;height:13px;object-fit:contain;display:block" />`,
   edit:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>`,
   trash:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>`,
   chevron: `<svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>`,
@@ -482,11 +496,11 @@ const rules = [
     metrics:{ leads:247, emails:124, opens:'38%', replies:12, rate:'31%', avgTime:'4.2h', messages:19, msgReceived:14, milestones:5 },
     trend:[14,18,22,16,30,27,34],
     milestones:[
-      {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Apr 1, 2026',  done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
-      {name:'First Reply Received',desc:'Lead responded to outreach email',    date:'Apr 3, 2026',  done:true,  bg:'#D1FAE5', fg:'#10B981'},
-      {name:'Meeting Booked',      desc:'Lead scheduled a discovery call',     date:'Apr 5, 2026',  done:true,  bg:'#EDE9FE', fg:'#8B5CF6'},
-      {name:'Offer Sent',          desc:'Agent sent property recommendations', date:'Apr 6, 2026',  done:true,  bg:'#FEF3C7', fg:'#F59E0B'},
-      {name:'Contract Submitted',  desc:'Awaiting lead signature',             date:'Pending',      done:false, bg:'#FEE2E2', fg:'#EF4444'},
+      {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Apr 1, 2026',  done:true,  badgeLabel:'Contact',  badgeColor:'#0069a8'},
+      {name:'First Reply Received',desc:'Lead responded to outreach email',    date:'Apr 3, 2026',  done:true,  badgeLabel:'Reply',     badgeColor:'#497d00'},
+      {name:'Meeting Booked',      desc:'Lead scheduled a discovery call',     date:'Apr 5, 2026',  done:true,  badgeLabel:'Meeting',   badgeColor:'#a800b7'},
+      {name:'Offer Sent',          desc:'Agent sent property recommendations', date:'Apr 6, 2026',  done:true,  badgeLabel:'Offer',     badgeColor:'#4d24ff'},
+      {name:'Contract Submitted',  desc:'Awaiting lead signature',             date:'Pending',      done:false, badgeLabel:'Contract',  badgeColor:'#ef4444'},
     ],
     activity:[
       {action:'Sent email to <span>Marcus Webb</span>',        time:'2 hours ago',   bg:'#EEF2FF', fg:'#4F46E5', ico:'email'},
@@ -502,11 +516,11 @@ const rules = [
     metrics:{ leads:183, emails:91, opens:'44%', replies:8, rate:'22%', avgTime:'6.1h', messages:11, msgReceived:7, milestones:3 },
     trend:[8,12,10,15,11,18,14],
     milestones:[
-      {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Mar 20, 2026', done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
-      {name:'First Reply Received',desc:'Lead responded to outreach email',    date:'Mar 25, 2026', done:true,  bg:'#D1FAE5', fg:'#10B981'},
-      {name:'Meeting Booked',      desc:'Lead scheduled a discovery call',     date:'Apr 2, 2026',  done:true,  bg:'#EDE9FE', fg:'#8B5CF6'},
-      {name:'Offer Sent',          desc:'Agent sent property recommendations', date:'Pending',      done:false, bg:'#FEF3C7', fg:'#F59E0B'},
-      {name:'Contract Submitted',  desc:'Awaiting lead signature',             date:'Pending',      done:false, bg:'#FEE2E2', fg:'#EF4444'},
+      {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Mar 20, 2026', done:true,  badgeLabel:'Contact',  badgeColor:'#0069a8'},
+      {name:'First Reply Received',desc:'Lead responded to outreach email',    date:'Mar 25, 2026', done:true,  badgeLabel:'Reply',     badgeColor:'#497d00'},
+      {name:'Meeting Booked',      desc:'Lead scheduled a discovery call',     date:'Apr 2, 2026',  done:true,  badgeLabel:'Meeting',   badgeColor:'#a800b7'},
+      {name:'Offer Sent',          desc:'Agent sent property recommendations', date:'Pending',      done:false, badgeLabel:'Offer',     badgeColor:'#4d24ff'},
+      {name:'Contract Submitted',  desc:'Awaiting lead signature',             date:'Pending',      done:false, badgeLabel:'Contract',  badgeColor:'#ef4444'},
     ],
     activity:[
       {action:'Sent email to <span>James Liu</span>',         time:'1 hour ago',  bg:'#EEF2FF', fg:'#4F46E5', ico:'email'},
@@ -520,11 +534,11 @@ const rules = [
     metrics:{ leads:312, emails:156, opens:'29%', replies:5, rate:'18%', avgTime:'8.4h', messages:7, msgReceived:3, milestones:2 },
     trend:[20,25,18,30,22,28,35],
     milestones:[
-      {name:'First Contact Made',  desc:'Agent sent first outreach',     date:'Apr 3, 2026', done:true,  bg:'#EEF2FF', fg:'#4F46E5'},
-      {name:'First Reply Received',desc:'Awaiting first reply from lead',date:'Pending',     done:false, bg:'#D1FAE5', fg:'#10B981'},
-      {name:'Meeting Booked',      desc:'No meetings booked yet',        date:'Pending',     done:false, bg:'#EDE9FE', fg:'#8B5CF6'},
-      {name:'Offer Sent',          desc:'Not started',                   date:'Pending',     done:false, bg:'#FEF3C7', fg:'#F59E0B'},
-      {name:'Contract Submitted',  desc:'Not started',                   date:'Pending',     done:false, bg:'#FEE2E2', fg:'#EF4444'},
+      {name:'First Contact Made',  desc:'Agent sent first outreach',     date:'Apr 3, 2026', done:true,  badgeLabel:'Contact',  badgeColor:'#0069a8'},
+      {name:'First Reply Received',desc:'Awaiting first reply from lead',date:'Pending',     done:false, badgeLabel:'Reply',     badgeColor:'#497d00'},
+      {name:'Meeting Booked',      desc:'No meetings booked yet',        date:'Pending',     done:false, badgeLabel:'Meeting',   badgeColor:'#a800b7'},
+      {name:'Offer Sent',          desc:'Not started',                   date:'Pending',     done:false, badgeLabel:'Offer',     badgeColor:'#4d24ff'},
+      {name:'Contract Submitted',  desc:'Not started',                   date:'Pending',     done:false, badgeLabel:'Contract',  badgeColor:'#ef4444'},
     ],
     activity:[
       {action:'Sent email to <span>Connor Walsh</span>',  time:'30 min ago',  bg:'#EEF2FF', fg:'#4F46E5', ico:'email'},
@@ -621,21 +635,23 @@ function openPanel(id) {
     </div>
   `).join('');
 
+  const chevronSvg = `<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 2.5L6.5 5L3.5 7.5"/></svg>`;
   let doneCount = 0;
   document.getElementById('pMilestones').innerHTML = r.milestones.map((ms, i) => {
     if (ms.done) doneCount++;
-    const badge = ms.done
-      ? `<span class="ms-badge done">${doneCount}</span>`
-      : `<span class="ms-badge pending">${i + 1}</span>`;
+    const num = ms.done ? doneCount : (i + 1);
+    const numCls = ms.done ? 'done' : 'pending';
     return `
-    <div class="ms-item">
-      <div class="ms-ico" style="background:${ms.bg};color:${ms.fg}">${I.milestone}</div>
-      <div class="ms-body">
-        <div class="ms-name">${ms.name}</div>
-        <div class="ms-desc">${ms.desc}</div>
-        <div class="ms-date">${ms.date}</div>
+    <div class="ms-item${ms.done ? '' : ' ms-pending'}" style="animation-delay:${i * 55}ms">
+      <div class="ms-row1">
+        <span class="ms-pill" style="background:${ms.badgeColor}">${ms.badgeLabel} ${chevronSvg}</span>
+        <span class="ms-name">${ms.name}</span>
       </div>
-      ${badge}
+      <div class="ms-desc">${ms.desc}</div>
+      <div class="ms-footer">
+        <span class="ms-date">${ms.date}</span>
+        <span class="ms-num ${numCls}">${num}</span>
+      </div>
     </div>`;
   }).join('');
 
