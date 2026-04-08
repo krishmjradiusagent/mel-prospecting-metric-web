@@ -149,7 +149,7 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 .metric-icon.leads      { background: var(--indigo-lt); color: var(--indigo); }
 .metric-icon.emails     { background: var(--cyan-lt);   color: var(--cyan); }
 .metric-icon.messages   { background: var(--orange-lt); color: var(--orange); }
-.metric-icon.milestones { background: #ede9fe; color: #2f2b49; }
+.metric-icon.milestones { background: #f1f5f9; color: #334155; }
 .metric-num  { font-size: 13px; font-weight: 700; color: var(--text); }
 .metric-lbl  { font-size: 12px; color: var(--text-2); }
 
@@ -447,7 +447,7 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
     <!-- §2 Milestones -->
     <div class="ps">
       <div class="ps-title">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>
+        <img src="https://www.figma.com/api/mcp/asset/baf7e70a-88ef-49d5-b83e-04c20e77525a" style="width:14px;height:14px;object-fit:contain;display:block" />
         Milestones Achieved
       </div>
       <div class="ms-list" id="pMilestones"></div>
@@ -621,11 +621,11 @@ function openPanel(id) {
   `;
 
   const stats = [
-    {cls:'leads',    val:m.leads,        label:'Leads',                   delta:'+12 this week', up:true, ico:I.lead     },
-    {cls:'emails',   val:m.emails,       label:'Email Sent',              delta:'+8 this week',  up:true, ico:I.email    },
-    {cls:'messages', val:m.messages,     label:'Text Message Sent',       delta:'+2 this week',  up:true, ico:I.msg      },
-    {cls:'msgrec',   val:m.msgReceived,  label:'Text Messages Received',  delta:'+1 this week',  up:true, ico:I.msg      },
-    {cls:'milest',   val:m.milestones,   label:'Milestones Achieved',     delta:`${m.milestones} of 5`, up:true, ico:I.milestone},
+    {cls:'leads',    val:m.leads,        label:'Leads',                  delta:'+12 this week',           up:true, ico:I.lead     },
+    {cls:'messages', val:m.messages,     label:'Messages Sent',          delta:'+2 this week',            up:true, ico:I.msg      },
+    {cls:'msgrec',   val:m.msgReceived,  label:'Text Messages Received', delta:'+1 this week',            up:true, ico:I.msg      },
+    {cls:'replies',  val:m.replies,      label:'Replies',                delta:'+1 this week',            up:true, ico:I.msg      },
+    {cls:'milest',   val:m.milestones,   label:'Milestones Achieved',    delta:`${m.milestones} of 5`,    up:true, ico:I.milestone},
   ];
   document.getElementById('pStats').innerHTML = stats.map(s => `
     <div class="stat">
@@ -636,11 +636,7 @@ function openPanel(id) {
   `).join('');
 
   const chevronSvg = `<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 2.5L6.5 5L3.5 7.5"/></svg>`;
-  let doneCount = 0;
   document.getElementById('pMilestones').innerHTML = r.milestones.map((ms, i) => {
-    if (ms.done) doneCount++;
-    const num = ms.done ? doneCount : (i + 1);
-    const numCls = ms.done ? 'done' : 'pending';
     return `
     <div class="ms-item${ms.done ? '' : ' ms-pending'}" style="animation-delay:${i * 55}ms">
       <div class="ms-row1">
@@ -648,10 +644,7 @@ function openPanel(id) {
         <span class="ms-name">${ms.name}</span>
       </div>
       <div class="ms-desc">${ms.desc}</div>
-      <div class="ms-footer">
-        <span class="ms-date">${ms.date}</span>
-        <span class="ms-num ${numCls}">${num}</span>
-      </div>
+      <div class="ms-date" style="margin-top:2px">${ms.date}</div>
     </div>`;
   }).join('');
 
