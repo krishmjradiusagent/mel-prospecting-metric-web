@@ -26,11 +26,11 @@
   --border:    #E5E7EB;
   --bg:        #F9FAFB;
   --white:     #FFFFFF;
-  --panel-w:   500px;
+  --panel-w:   580px;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--white);
   color: var(--text);
   font-size: 14px;
@@ -239,47 +239,153 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 }
 .ps-title svg { width: 13px; height: 13px; }
 
-/* Milestone animated icon */
 .ms-title-ico {
-  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
   background: #fef3c7;
   display: flex; align-items: center; justify-content: center;
-  animation: msIconGlow 2.4s ease-in-out infinite;
-  box-shadow: 0 2px 8px rgba(245,158,11,.35);
 }
 .ms-title-ico svg { width: 11px; height: 11px; }
-@keyframes msIconGlow {
-  0%,100% { box-shadow: 0 2px 8px rgba(245,158,11,.35); transform: scale(1); }
-  50%      { box-shadow: 0 2px 16px rgba(245,158,11,.65); transform: scale(1.08); }
+
+/* ── STATS GRID — DM Sans · Drill-Down premium ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
-/* Stats grid */
-.stats-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; }
-.stat { grid-column: span 2; } /* row 1: 3 cards × 2 = 6 */
-.stat.wide { grid-column: span 3; } /* row 2: 2 cards × 3 = 6 */
+/* Base stat card */
 .stat {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 14px;
-  transition: border-color .15s, box-shadow .15s;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e8eaed;
+  border-radius: 14px;
+  padding: 14px 16px 13px;
+  overflow: hidden;
+  cursor: default;
+  transition: transform .22s cubic-bezier(.25,.46,.45,.94),
+              box-shadow .22s cubic-bezier(.25,.46,.45,.94),
+              border-color .18s ease;
 }
-.stat:hover { border-color: #A5B4FC; box-shadow: 0 0 0 3px rgba(79,70,229,.06); }
-.stat-top { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+/* Coloured top-edge accent bar */
+.stat::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--stat-accent, transparent);
+  border-radius: 14px 14px 0 0;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.stat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,.10), 0 3px 10px rgba(0,0,0,.06);
+  border-color: #d1d5db;
+}
+.stat:hover::before { opacity: 1; }
+
+/* Per-card accent gradients */
+.stat.acc-indigo { --stat-accent: linear-gradient(90deg,#6366f1,#818cf8); }
+.stat.acc-blue   { --stat-accent: linear-gradient(90deg,#0ea5e9,#38bdf8); }
+.stat.acc-pink   { --stat-accent: linear-gradient(90deg,#ec4899,#f472b6); }
+.stat.acc-violet { --stat-accent: linear-gradient(90deg,#8b5cf6,#a78bfa); }
+.stat.acc-teal   { --stat-accent: linear-gradient(90deg,#14b8a6,#2dd4bf); }
+.stat.acc-amber  { --stat-accent: linear-gradient(90deg,#f59e0b,#fbbf24); }
+
+/* Stat header row */
+.stat-top { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; }
 .stat-ico {
-  width: 22px; height: 22px; border-radius: 6px;
+  width: 26px; height: 26px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
 }
-.stat-ico svg { width: 11px; height: 11px; }
+.stat:hover .stat-ico { transform: scale(1.18) rotate(-4deg); }
+.stat-ico svg { width: 13px; height: 13px; }
+.stat-ico.ms-ico svg { width: 13px; height: 13px; }
 .stat-ico.leads    { background: #e0e7ff; color: #4338ca; }
 .stat-ico.messages { background: #d1fae5; color: #059669; }
 .stat-ico.replies  { background: #fce7f3; color: #db2777; }
 .stat-ico.msgrec   { background: #e0f2fe; color: #0284c7; }
 .stat-ico.milest   { background: #fef3c7; color: #d97706; }
-.stat-ico.milest img { width: 11px; height: 11px; object-fit: contain; filter: invert(47%) sepia(85%) saturate(500%) hue-rotate(10deg) brightness(95%); }
-.stat-lbl { font-size: 11px; color: var(--text-2); }
-.stat-val { font-size: 20px; font-weight: 700; }
-.stat-delta { font-size: 11px; font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 2px; }
-.up   { color: var(--green); }
-.down { color: var(--red); }
+.stat-ico.inapp    { background: #ede9fe; color: #7c3aed; }
+.stat-ico.inappmsg { background: #ecfdf5; color: #059669; }
+.stat-ico.milest img { width: 12px; height: 12px; object-fit: contain; filter: invert(47%) sepia(85%) saturate(500%) hue-rotate(10deg) brightness(95%); }
+
+.stat-lbl { font-size: 11px; color: var(--text-2); font-weight: 600; letter-spacing: .03em; }
+
+/* Count-up number */
+.stat-val {
+  font-size: 26px; font-weight: 800; line-height: 1;
+  letter-spacing: -.8px; color: #111827;
+}
+.stat-delta {
+  font-size: 11px; font-weight: 600; margin-top: 5px;
+  display: flex; align-items: center; gap: 3px;
+}
+.up   { color: #10b981; }
+.down { color: #9ca3af; }
+
+/* Dual-stat card (Text + Email) — clean vertical stack */
+.stat-dual { display: flex; flex-direction: column; }
+.stat-dual-sent { display: flex; align-items: baseline; gap: 6px; }
+.stat-dual-val { font-size: 26px; font-weight: 800; color: #111827; letter-spacing: -.6px; line-height: 1; }
+.stat-dual-sub {
+  font-size: 9px; font-weight: 700; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: .07em;
+}
+.stat-dual-sent-delta { font-size: 11px; font-weight: 600; color: #10b981; margin-left: auto; }
+.stat-dual-replied {
+  display: flex; align-items: center; gap: 6px;
+  padding-top: 8px; margin-top: 8px;
+  border-top: 1px dashed #e5e7eb;
+}
+.stat-dual-replied-val { font-size: 16px; font-weight: 800; color: #111827; letter-spacing: -.3px; }
+.stat-dual-replied-lbl { font-size: 10px; color: var(--text-2); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.stat-dual-replied-delta { font-size: 10px; font-weight: 700; color: #10b981; margin-left: auto; }
+
+/* Milestones trigger card */
+.stat.milest-card { cursor: pointer; }
+.milest-chevron {
+  width: 15px; height: 15px; color: var(--text-3); margin-left: auto; flex-shrink: 0;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), color .15s;
+}
+.stat.milest-card:hover .milest-chevron { color: var(--text-2); }
+.milest-chevron.open { transform: rotate(90deg); }
+
+/* Milestone cards — injected into same 3-col grid */
+.stat.ms-grid-card {
+  cursor: default;
+  animation: cardIn .38s cubic-bezier(.25,.46,.45,.94) both;
+}
+.stat.ms-grid-card.ms-pending { opacity: .45; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Milestone icon square — coloured bg, white check/dash SVG */
+.stat-ico.ms-ico {
+  /* background set inline via JS */
+}
+.stat-ico.ms-ico svg { width: 11px; height: 11px; }
+
+/* Staggered entrance for all stat cards on panel open */
+@keyframes statIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stat { animation: statIn .3s cubic-bezier(.25,.46,.45,.94) both; }
+
+/* Count-up pulse on the number when it lands */
+@keyframes numPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.stat-val.pop { animation: numPop .35s cubic-bezier(.34,1.56,.64,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .stat, .stat.ms-grid-card { animation: none !important; transition: none !important; }
+  .stat:hover { transform: none; box-shadow: none; }
+  .stat:hover .stat-ico { transform: none; }
+}
 
 /* Sparkline */
 .spark-wrap { }
@@ -302,41 +408,55 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 .spark-day { flex: 1; text-align: center; font-size: 10px; color: var(--text-3); }
 
 /* Milestones */
-/* ── Milestone cards — mobile-matched style ── */
-.ms-list { display: flex; flex-direction: column; gap: 10px; }
+/* ── Milestone timeline ── */
+.ms-list { display: flex; flex-direction: column; padding-left: 0; }
 .ms-item {
-  background: #f7f0ff; border-radius: 12px; padding: 12px;
-  display: flex; flex-direction: column; gap: 6px; border: none;
+  display: flex; gap: 14px; align-items: flex-start;
+  position: relative; padding-bottom: 20px;
   cursor: default;
   animation: msIn 0.32s cubic-bezier(0.34,1.56,0.64,1) both;
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
 }
-.ms-item:hover { transform: translateY(-2px); box-shadow: 0 4px 18px rgba(79,46,229,.10); }
-.ms-item.ms-pending { opacity: 0.62; }
-.ms-row1 { display: flex; align-items: center; gap: 8px; }
+.ms-item:last-child { padding-bottom: 0; }
+.ms-item.ms-pending { opacity: 0.55; }
+
+/* vertical line */
+.ms-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 13px; top: 30px; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #e2e8f0 0%, transparent 100%);
+}
+
+/* node dot */
+.ms-node {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
+  position: relative; z-index: 1;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.08);
+}
+.ms-node svg { width: 12px; height: 12px; }
+.ms-item:hover .ms-node { transform: scale(1.18); box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.14); }
+
+/* content */
+.ms-body { flex: 1; padding-top: 3px; }
+.ms-row1 { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
 .ms-pill {
   display: inline-flex; align-items: center; gap: 3px;
-  padding: 3px 8px; border-radius: 24px;
-  font-size: 10px; font-weight: 600; color: #fff; flex-shrink: 0; white-space: nowrap;
-  letter-spacing: 0.2px;
+  padding: 2px 7px; border-radius: 6px;
+  font-size: 10px; font-weight: 600; flex-shrink: 0; white-space: nowrap;
+  letter-spacing: 0.3px;
 }
 .ms-pill svg { width: 9px; height: 9px; opacity: .85; }
-.ms-name { font-size: 14px; font-weight: 600; color: #1e1b4b; letter-spacing: 0.3px; line-height: 1.3; }
-.ms-desc { font-size: 12px; color: #ad94c7; line-height: 1.4; }
-.ms-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; }
-.ms-date { font-size: 10px; color: #6e5f7d; letter-spacing: 0.3px; }
-.ms-num {
-  width: 20px; height: 20px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; flex-shrink: 0;
-  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
-}
-.ms-num.done    { background: #d1fae5; color: #065f46; }
-.ms-num.pending { background: #f3f4f6; color: #9ca3af; }
-.ms-item:hover .ms-num.done { transform: scale(1.15); }
+.ms-name { font-size: 13px; font-weight: 600; color: #1e293b; letter-spacing: 0.2px; line-height: 1.35; }
+.ms-line2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 1px; }
+.ms-desc { font-size: 11.5px; color: #94a3b8; line-height: 1.45; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-date { font-size: 10px; color: #94a3b8; letter-spacing: 0.3px; white-space: nowrap; flex-shrink: 0; }
 @keyframes msIn {
-  from { opacity: 0; transform: translateY(10px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Activity */
@@ -459,7 +579,7 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
     </div>
 
     <!-- §2 Milestones -->
-    <div class="ps">
+    <div class="ps ms-section">
       <div class="ps-title">
         <div class="ms-title-ico"><img src="https://www.figma.com/api/mcp/asset/f317a6ea-2e08-467c-9d77-c8dec088ce00" style="width:11px;height:11px;object-fit:contain;display:block;filter:invert(47%) sepia(85%) saturate(500%) hue-rotate(10deg) brightness(95%)" /></div>
         Milestones Achieved
@@ -467,14 +587,6 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
       <div class="ms-list" id="pMilestones"></div>
     </div>
 
-    <!-- §3 Activity -->
-    <div class="ps">
-      <div class="ps-title">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg>
-        Agent Activity
-      </div>
-      <div class="act-list" id="pActivity"></div>
-    </div>
   </div>
 
   <div class="pf">
@@ -487,19 +599,28 @@ tbody td { padding: 14px 16px; vertical-align: middle; }
 </div>
 
 <script>
-/* ─── SVG ICONS ──────────────────────────────── */
+/* ─── SVG ICONS — Lucide v1.8 (24×24 stroke) ─── */
+const L = `xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
 const I = {
-  lead:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/><path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>`,
-  email:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/></svg>`,
+  lead:    `<svg ${L}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>`,
+  email:   `<svg ${L}><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>`,
   eye:     `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>`,
-  msg:     `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg>`,
-  rate:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>`,
-  clock:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>`,
-  check:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0-1a8 8 0 1 1 0 16A8 8 0 0 1 8 0z"/><path d="M8 4.5a.5.5 0 0 1 .5.5v3.793l2.146 2.147a.5.5 0 0 1-.708.707l-2.5-2.5A.5.5 0 0 1 7.5 9V5a.5.5 0 0 1 .5-.5z"/></svg>`,
-  milestone: `<img src="https://www.figma.com/api/mcp/asset/f317a6ea-2e08-467c-9d77-c8dec088ce00" style="width:11px;height:11px;object-fit:contain;display:block" />`,
+  msg:     `<svg ${L}><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg>`,
+  rate:    `<svg ${L}><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2z"/></svg>`,
+  clock:   `<svg ${L}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  check:   `<svg ${L}><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>`,
+  milestone: `<svg ${L}><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z"/></svg>`,
   edit:    `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>`,
   trash:   `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>`,
   chevron: `<svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>`,
+  // Milestone type icons (Lucide)
+  msContact: `<svg ${L}><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>`,
+  msReply:   `<svg ${L}><path d="M20 18v-2a4 4 0 0 0-4-4H4"/><path d="m9 17-5-5 5-5"/></svg>`,
+  msMeeting: `<svg ${L}><path d="M8 2v4"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/><rect width="18" height="18" x="3" y="4" rx="2"/></svg>`,
+  msOffer:   `<svg ${L}><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>`,
+  msContract:`<svg ${L}><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="m9 15 2 2 4-4"/></svg>`,
+  inappChat: `<svg ${L}><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>`,
+  inappMsg:  `<svg ${L}><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>`,
 };
 
 /* ─── DATA ───────────────────────────────────── */
@@ -507,7 +628,7 @@ const rules = [
   {
     id:1, name:'All Buyers', type:'Buyer', source:'Other Agency',
     channel:'InApp', created:'04/07/2026', status:'new', statusLabel:'New Client',
-    metrics:{ leads:247, emails:124, opens:'38%', replies:12, rate:'31%', avgTime:'4.2h', messages:19, msgReceived:14, milestones:5 },
+    metrics:{ leads:247, emails:124, emailReplied:12, opens:'38%', replies:12, rate:'31%', avgTime:'4.2h', messages:19, msgReceived:14, inAppChat:31, inAppMessages:58, milestones:5 },
     trend:[14,18,22,16,30,27,34],
     milestones:[
       {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Apr 1, 2026',  done:true,  badgeLabel:'Contact',  badgeColor:'#0069a8'},
@@ -527,7 +648,7 @@ const rules = [
   {
     id:2, name:'All Sellers', type:'Seller', source:'Radius',
     channel:'Email', created:'03/15/2026', status:'active', statusLabel:'Active',
-    metrics:{ leads:183, emails:91, opens:'44%', replies:8, rate:'22%', avgTime:'6.1h', messages:11, msgReceived:7, milestones:3 },
+    metrics:{ leads:183, emails:91, emailReplied:8, opens:'44%', replies:8, rate:'22%', avgTime:'6.1h', messages:11, msgReceived:7, inAppChat:19, inAppMessages:42, milestones:3 },
     trend:[8,12,10,15,11,18,14],
     milestones:[
       {name:'First Contact Made',  desc:'Agent sent first outreach',           date:'Mar 20, 2026', done:true,  badgeLabel:'Contact',  badgeColor:'#0069a8'},
@@ -545,7 +666,7 @@ const rules = [
   {
     id:3, name:'Hot Leads — Downtown', type:'Buyer', source:'Zillow',
     channel:'Email', created:'04/01/2026', status:'pending', statusLabel:'Pending Review',
-    metrics:{ leads:312, emails:156, opens:'29%', replies:5, rate:'18%', avgTime:'8.4h', messages:7, msgReceived:3, milestones:2 },
+    metrics:{ leads:312, emails:156, emailReplied:5, opens:'29%', replies:5, rate:'18%', avgTime:'8.4h', messages:7, msgReceived:3, inAppChat:9, inAppMessages:22, milestones:2 },
     trend:[20,25,18,30,22,28,35],
     milestones:[
       {name:'First Contact Made',  desc:'Agent sent first outreach',     date:'Apr 3, 2026', done:true,  badgeLabel:'Contact',  badgeColor:'#0069a8'},
@@ -624,45 +745,180 @@ function openPanel(id) {
     <span style="font-size:12px;color:#6B7280">Source: ${r.source}</span>
   `;
 
-  const stats = [
-    {cls:'leads',    val:m.leads,       label:'Leads',                  delta:'+12 this week',        up:true, ico:I.lead,      wide:false},
-    {cls:'msgrec',   val:m.msgReceived, label:'Text Replies',           delta:'+1 this week',         up:true, ico:I.msg,       wide:false},
-    {cls:'replies',  val:m.replies,     label:'Email Replies',          delta:'+1 this week',         up:true, ico:I.email,     wide:false},
-    {cls:'messages', val:m.messages,    label:'Text Messages Sent',     delta:'+2 this week',         up:true, ico:I.msg,       wide:true },
-    {cls:'milest',   val:m.milestones,  label:'Milestones Achieved',    delta:`${m.milestones} of 5`, up:true, ico:I.milestone, wide:true },
-  ];
-  document.getElementById('pStats').innerHTML = stats.map(s => `
-    <div class="stat${s.wide?' wide':''}">
-      <div class="stat-top"><div class="stat-ico ${s.cls}">${s.ico}</div><span class="stat-lbl">${s.label}</span></div>
-      <div class="stat-val">${s.val}</div>
-      <div class="stat-delta ${s.up?'up':'down'}">${s.up?'↑':'↓'} ${s.delta}</div>
+  document.getElementById('pStats').innerHTML = `
+    <div class="stat acc-indigo" style="animation-delay:.04s">
+      <div class="stat-top"><div class="stat-ico leads">${I.lead}</div><span class="stat-lbl">Leads</span></div>
+      <div class="stat-val">${m.leads}</div>
+      <div class="stat-delta up">↑ +12 this week</div>
     </div>
-  `).join('');
 
-  const chevronSvg = `<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 2.5L6.5 5L3.5 7.5"/></svg>`;
+    <div class="stat acc-blue" style="animation-delay:.07s">
+      <div class="stat-top"><div class="stat-ico msgrec">${I.msg}</div><span class="stat-lbl">Text Messages</span></div>
+      <div class="stat-dual">
+        <div class="stat-dual-sent">
+          <div class="stat-dual-val">${m.messages}</div>
+          <div class="stat-dual-sub">Sent</div>
+          <div class="stat-dual-sent-delta">↑ +2 wk</div>
+        </div>
+        <div class="stat-dual-replied">
+          <div class="stat-dual-replied-val">${m.msgReceived}</div>
+          <div class="stat-dual-replied-lbl">Replied</div>
+          <div class="stat-dual-replied-delta">↑ +1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat acc-pink" style="animation-delay:.10s">
+      <div class="stat-top"><div class="stat-ico replies">${I.email}</div><span class="stat-lbl">Email</span></div>
+      <div class="stat-dual">
+        <div class="stat-dual-sent">
+          <div class="stat-dual-val">${m.emails}</div>
+          <div class="stat-dual-sub">Sent</div>
+          <div class="stat-dual-sent-delta">↑ +8 wk</div>
+        </div>
+        <div class="stat-dual-replied">
+          <div class="stat-dual-replied-val">${m.emailReplied}</div>
+          <div class="stat-dual-replied-lbl">Replied</div>
+          <div class="stat-dual-replied-delta">↑ +1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat acc-violet" style="animation-delay:.13s">
+      <div class="stat-top"><div class="stat-ico inapp">${I.inappChat}</div><span class="stat-lbl">In-App Chat</span></div>
+      <div class="stat-val">${m.inAppChat}</div>
+      <div class="stat-delta up">↑ +3 this week</div>
+    </div>
+
+    <div class="stat acc-teal" style="animation-delay:.16s">
+      <div class="stat-top"><div class="stat-ico inappmsg">${I.inappMsg}</div><span class="stat-lbl">In-App Messages</span></div>
+      <div class="stat-val">${m.inAppMessages}</div>
+      <div class="stat-delta up">↑ +6 this week</div>
+    </div>
+
+    <div class="stat acc-amber milest-card" id="milestCard" onclick="toggleMilestones(this, ${r.id})" title="Click to expand milestones" style="animation-delay:.19s">
+      <div class="stat-top">
+        <div class="stat-ico milest">${I.milestone}</div>
+        <span class="stat-lbl">Milestones</span>
+        <svg class="milest-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"/></svg>
+      </div>
+      <div class="stat-val">${m.milestones}</div>
+      <div class="stat-delta up">↑ ${m.milestones} of 5</div>
+    </div>
+  `;
+
+  // Count-up animation on .stat-val elements (ease-out per skill guidelines)
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('#pStats .stat-val, #pStats .stat-dual-val').forEach((el, i) => {
+        const target = parseFloat(el.textContent.replace(/[^0-9.]/g, ''));
+        if (isNaN(target) || target === 0) return;
+        const duration = 600;
+        const delay = i * 60;
+        const start = performance.now() + delay;
+        const isFloat = el.textContent.includes('.');
+        function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+        function tick(now) {
+          const elapsed = Math.max(0, now - start);
+          const progress = Math.min(elapsed / duration, 1);
+          const value = target * easeOut(progress);
+          el.textContent = isFloat ? value.toFixed(1) : Math.round(value).toString();
+          if (progress < 1) requestAnimationFrame(tick);
+          else { el.textContent = isFloat ? target.toFixed(1) : target.toString(); el.classList.add('pop'); }
+        }
+        requestAnimationFrame(tick);
+      });
+    });
+  }
+
+  const msNodeIconMap = {
+    'Contact':  I.msContact,
+    'Reply':    I.msReply,
+    'Meeting':  I.msMeeting,
+    'Offer':    I.msOffer,
+    'Contract': I.msContract,
+  };
+  const msNodeColors = {
+    'Contact':  { bg: '#dbeafe', color: '#1d4ed8' },
+    'Reply':    { bg: '#dcfce7', color: '#15803d' },
+    'Meeting':  { bg: '#f3e8ff', color: '#7c3aed' },
+    'Offer':    { bg: '#ede9fe', color: '#4d24ff' },
+    'Contract': { bg: '#fee2e2', color: '#dc2626' },
+  };
   document.getElementById('pMilestones').innerHTML = r.milestones.map((ms, i) => {
+    const clr = msNodeColors[ms.badgeLabel] || { bg: '#f1f5f9', color: '#64748b' };
+    const ico = msNodeIconMap[ms.badgeLabel] || I.milestone;
     return `
     <div class="ms-item${ms.done ? '' : ' ms-pending'}" style="animation-delay:${i * 55}ms">
-      <div class="ms-row1">
-        <span class="ms-pill" style="background:${ms.badgeColor}">${ms.badgeLabel} ${chevronSvg}</span>
-        <span class="ms-name">${ms.name}</span>
+      <div class="ms-node" style="background:${clr.bg};color:${clr.color}">${ico}</div>
+      <div class="ms-body">
+        <div class="ms-row1">
+          <span class="ms-pill" style="background:${clr.bg};color:${clr.color}">${ms.badgeLabel}</span>
+          <span class="ms-name">${ms.name}</span>
+        </div>
+        <div class="ms-line2">
+          <div class="ms-desc">${ms.desc}</div>
+          <div class="ms-date">${ms.date}</div>
+        </div>
       </div>
-      <div class="ms-desc">${ms.desc}</div>
-      <div class="ms-date" style="margin-top:2px">${ms.date}</div>
     </div>`;
   }).join('');
 
-  document.getElementById('pActivity').innerHTML = r.activity.map(a => `
-    <div class="act-item">
-      <div class="act-dot" style="background:${a.bg};color:${a.fg}">${I[a.ico]}</div>
-      <div>
-        <div class="act-action">${a.action}</div>
-        <div class="act-time">${a.time}</div>
-      </div>
-    </div>`).join('');
 
   document.getElementById('overlay').classList.add('open');
   document.getElementById('panel').classList.add('open');
+}
+
+function toggleMilestones(card, ruleId) {
+  const grid    = document.getElementById('pStats');
+  const chevron = card.querySelector('.milest-chevron');
+  const existing = grid.querySelectorAll('.ms-grid-card');
+
+  if (existing.length) {
+    existing.forEach(el => el.remove());
+    chevron.classList.remove('open');
+    return;
+  }
+
+  const r = rules.find(x => x.id === ruleId);
+  if (!r) return;
+
+  chevron.classList.add('open');
+
+  // Map each milestone badge to its Lucide icon
+  const msIconMap = {
+    'Contact':  I.msContact,
+    'Reply':    I.msReply,
+    'Meeting':  I.msMeeting,
+    'Offer':    I.msOffer,
+    'Contract': I.msContract,
+  };
+  // Light bg / dark icon colors per milestone type
+  const msLightBg = {
+    'Contact':  { bg: '#dbeafe', color: '#1d4ed8' },
+    'Reply':    { bg: '#dcfce7', color: '#15803d' },
+    'Meeting':  { bg: '#f3e8ff', color: '#7c3aed' },
+    'Offer':    { bg: '#ede9fe', color: '#4d24ff' },
+    'Contract': { bg: '#fee2e2', color: '#dc2626' },
+  };
+
+  r.milestones.forEach((ms, i) => {
+    const div = document.createElement('div');
+    div.className = `stat ms-grid-card${ms.done ? '' : ' ms-pending'}`;
+    div.style.animationDelay = `${i * 60}ms`;
+    div.style.setProperty('--stat-accent', ms.badgeColor);
+    const ico = msIconMap[ms.badgeLabel] || I.milestone;
+    const clr = msLightBg[ms.badgeLabel] || { bg: '#f1f5f9', color: '#64748b' };
+    div.innerHTML = `
+      <div class="stat-top">
+        <div class="stat-ico ms-ico" style="background:${clr.bg};color:${clr.color}">${ico}</div>
+        <span class="stat-lbl">${ms.badgeLabel}</span>
+      </div>
+      <div class="stat-val">${i + 1}</div>
+      <div class="stat-delta ${ms.done ? 'up' : 'down'}">${ms.done ? '↑ Achieved' : '— Pending'}</div>
+    `;
+    grid.appendChild(div);
+  });
 }
 
 function closePanel() {
